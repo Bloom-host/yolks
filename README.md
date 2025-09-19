@@ -87,6 +87,8 @@ is tagged correctly.
     * `ghcr.io/bloom-host/yolks:java_24`
   * [`java24 - GraalVM`](java/24-graalvm)
 	* `ghcr.io/bloom-host/yolks:java_24-graalvm`
+  * [`java25`](java/25)
+	  * `ghcr.io/bloom-host/yolks:java_25`
 * [`nodejs`](nodejs)
   * [`node12`](nodejs/12)
     * `ghcr.io/bloom-host/yolks:nodejs_12`
