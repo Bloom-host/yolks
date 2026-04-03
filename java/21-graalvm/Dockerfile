@@ -6,7 +6,7 @@ ARG VERSION=21.0.2
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8' ARCH='x64'
 
 RUN apt-get update -y \
-  && apt-get install -y --no-install-recommends curl ca-certificates openssl git tar sqlite3 fontconfig tzdata locales iproute2 \
+  && apt-get install -y --no-install-recommends curl ca-certificates openssl git git-lfs tar sqlite3 fontconfig tzdata locales iproute2 \
   && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
   && locale-gen en_US.UTF-8 \
   && curl --retry 3 -Lfso /tmp/graalvm.tar.gz https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-${VERSION}/graalvm-community-jdk-${VERSION}_linux-${ARCH}_bin.tar.gz \
@@ -16,6 +16,7 @@ RUN apt-get update -y \
   && export PATH="/opt/java/graalvm/bin:$PATH" \
   && rm -rf /var/lib/apt/lists/* \
   && rm -rf /tmp/graalvm.tar.gz \
+  && git lfs install --system \
   && useradd -d /home/container -m container
 
 ENV JAVA_HOME=/opt/java/graalvm \
