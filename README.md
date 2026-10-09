@@ -102,8 +102,14 @@ is tagged correctly.
     * `ghcr.io/bloom-host/yolks:nodejs_17`
   * [`node18`](nodejs/18)
     * `ghcr.io/bloom-host/yolks:nodejs_18`
-  * [`node20`](nodejs/18)
+  * [`node20`](nodejs/20)
     * `ghcr.io/bloom-host/yolks:nodejs_20`
+  * [`node22`](nodejs/22)
+    * `ghcr.io/bloom-host/yolks:nodejs_22`
+  * [`node24`](nodejs/24)
+    * `ghcr.io/bloom-host/yolks:nodejs_24`
+  * [`node26`](nodejs/26)
+    * `ghcr.io/bloom-host/yolks:nodejs_26`
 * [`python`](python)
   * [`python3.7`](python/3.7)
     * `ghcr.io/bloom-host/yolks:python_3.7`

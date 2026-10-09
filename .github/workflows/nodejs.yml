@@ -7,7 +7,7 @@ on:
     branches:
       - master
     paths:
-      - nodejs/*
+      - nodejs/**
 jobs:
   push:
     name: "yolks:nodejs_${{ matrix.tag }}"
@@ -23,6 +23,9 @@ jobs:
           - 17
           - 18
           - 20
+          - 22
+          - 24
+          - 26
     steps:
       - uses: actions/checkout@v3
       # Setup QEMU for ARM64 Build
