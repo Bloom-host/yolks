@@ -32,6 +32,13 @@ is tagged correctly.
     * `ghcr.io/bloom-host/yolks:alpine`
   * [`debian`](oses/debian)
     * `ghcr.io/bloom-host/yolks:debian`
+* [`caddy`](caddy)
+  * [`caddy - PHP 8.3`](caddy/php8.3)
+    * `ghcr.io/bloom-host/yolks:caddy_php8.3`
+  * [`caddy - PHP 8.4`](caddy/php8.4)
+    * `ghcr.io/bloom-host/yolks:caddy_php8.4`
+  * [`caddy - PHP 8.5`](caddy/php8.5)
+    * `ghcr.io/bloom-host/yolks:caddy_php8.5`
 * [`games`](games)
   * [`rust`](games/rust)
     * `ghcr.io/bloom-host/games:rust`

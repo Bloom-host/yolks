@@ -1,0 +1,20 @@
+name: keepalive
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 15 * *"
+jobs:
+  keepalive:
+    name: "re-enable scheduled workflows"
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      # GitHub disables scheduled workflows in public repositories after 60 days without commits.
+      # Enabling them through the API (including this one) resets that timer.
+      - name: enable workflows
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/actions/workflows" --paginate --jq '.workflows[].id' \
+            | xargs -I{} gh api -X PUT "repos/${GITHUB_REPOSITORY}/actions/workflows/{}/enable"
