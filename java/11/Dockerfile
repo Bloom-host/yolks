@@ -20,15 +20,15 @@
 # SOFTWARE.
 #
 
-# Hard coded specific Java version to fix issue with manifest constructor class in
-# newer Java versions breaking all modpacks and versions that are not using the
-# latest Forge release. This should be removed when the manifest constructor class
-# issue is backported or if Forge decides to abandon old versions and we need
-# newer Java versions. Old Quay images were updated like once a year, so it's ok.
+# Forge 1.13-1.16.5 before 36.2.26 (ModLauncher < 8.1.3) crashes on Java 8u321+ / 11.0.14+
+# with NoSuchMethodError: ManifestEntryVerifier.<init>. The image ships the last working JDK
+# in /opt/java/legacy and the entrypoint switches to it only for those servers.
 #
 # @see https://github.com/McModLauncher/modlauncher/issues/91
 
-FROM        --platform=$TARGETOS/$TARGETARCH eclipse-temurin:11.0.13_8-jdk-focal
+FROM        --platform=$TARGETOS/$TARGETARCH eclipse-temurin:11.0.13_8-jdk-focal AS legacy
+
+FROM        --platform=$TARGETOS/$TARGETARCH eclipse-temurin:11-jdk-jammy
 
 LABEL       author="Matthew Penner" maintainer="matthew@pterodactyl.io"
 
@@ -39,6 +39,11 @@ RUN 		apt-get update -y \
  			&& apt-get install -y lsof curl ca-certificates openssl git git-lfs tar sqlite3 fontconfig libfreetype6 tzdata iproute2 libstdc++6 \
  			&& git lfs install --system \
  			&& useradd -d /home/container -m container
+
+COPY        --from=legacy /opt/java/openjdk /opt/java/legacy
+
+COPY        ./../patch-jdks.sh ./../blocked.certs /tmp/
+RUN         bash /tmp/patch-jdks.sh && rm /tmp/patch-jdks.sh /tmp/blocked.certs
 
 USER        container
 ENV         USER=container HOME=/home/container
