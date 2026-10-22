@@ -33,6 +33,21 @@ export INTERNAL_IP
 # Switch to the container's working directory
 cd /home/container || exit 1
 
+# Forge 1.13-1.16.5 before 36.2.26 ships ModLauncher < 8.1.3, which crashes on Java 8u321+ / 11.0.14+.
+# Images that bundle a pre-break JRE in /opt/java/legacy switch to it for those servers only.
+# @see https://github.com/McModLauncher/modlauncher/issues/91
+if [ -d /opt/java/legacy ]; then
+	for dir in libraries/cpw/mods/modlauncher/*/; do
+		[ -d "$dir" ] || continue
+		version=$(basename "$dir")
+		if [ "$(printf '%s\n' "$version" 8.1.3 | sort -V | head -n1)" != "8.1.3" ]; then
+			printf "\033[1m\033[33mcontainer@pterodactyl~ \033[0mModLauncher %s found, using legacy Java for Forge compatibility\n" "$version"
+			export JAVA_HOME=/opt/java/legacy PATH="/opt/java/legacy/bin:${PATH}"
+			break
+		fi
+	done
+fi
+
 # Print Java version
 printf "\033[1m\033[33mcontainer@pterodactyl~ \033[0mjava -version\n"
 java -version
