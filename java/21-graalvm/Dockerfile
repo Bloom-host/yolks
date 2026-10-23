@@ -22,6 +22,9 @@ RUN apt-get update -y \
 ENV JAVA_HOME=/opt/java/graalvm \
     PATH="/opt/java/graalvm/bin:$PATH"
 
+COPY        ./../block-certs.sh ./../blocked.certs /tmp/
+RUN         bash /tmp/block-certs.sh && rm /tmp/block-certs.sh /tmp/blocked.certs
+
 USER        container
 ENV         USER=container HOME=/home/container
 WORKDIR     /home/container
