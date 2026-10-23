@@ -6,6 +6,9 @@ RUN apt-get update -y \
 	&& git lfs install --system \
 	&& useradd -d /home/container -m container
 
+COPY        ./../block-certs.sh ./../blocked.certs /tmp/
+RUN         bash /tmp/block-certs.sh && rm /tmp/block-certs.sh /tmp/blocked.certs
+
 USER        container
 ENV         USER=container HOME=/home/container
 WORKDIR     /home/container
