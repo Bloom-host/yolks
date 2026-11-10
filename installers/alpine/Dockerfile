@@ -20,11 +20,12 @@
 # SOFTWARE.
 #
 
-FROM        --platform=$TARGETOS/$TARGETARCH alpine:latest
+FROM        --platform=$TARGETOS/$TARGETARCH alpine:3.24
 
 LABEL       author="Matthew Penner" maintainer="matthew@pterodactyl.io"
 
-LABEL       org.opencontainers.image.source="https://github.com/pterodactyl/yolks"
+LABEL       org.opencontainers.image.source="https://github.com/bloom-host/yolks"
 LABEL       org.opencontainers.image.licenses=MIT
 
-RUN         apk add --update --no-cache ca-certificates curl git jq wget
+# Drop-in for ghcr.io/parkervcp/installers:alpine (same packages)
+RUN         apk add --no-cache ca-certificates curl unzip tar git jq wget xz
