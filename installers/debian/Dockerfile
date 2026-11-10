@@ -20,16 +20,24 @@
 # SOFTWARE.
 #
 
-FROM        --platform=$TARGETOS/$TARGETARCH debian:bullseye-slim
+FROM        --platform=$TARGETOS/$TARGETARCH debian:bookworm-slim
 
 LABEL       author="Matthew Penner" maintainer="matthew@pterodactyl.io"
 
-LABEL       org.opencontainers.image.source="https://github.com/pterodactyl/yolks"
+LABEL       org.opencontainers.image.source="https://github.com/bloom-host/yolks"
 LABEL       org.opencontainers.image.licenses=MIT
 
 ENV         DEBIAN_FRONTEND=noninteractive
 
-RUN         dpkg --add-architecture i386 \
-				&& apt update \
-				&& apt upgrade -y \
-				&& apt -y --no-install-recommends install ca-certificates curl lib32gcc-s1 libsdl2-2.0-0:i386 git wget
+# Drop-in for ghcr.io/parkervcp/installers:debian (same base and packages).
+# The apt lists are kept on purpose: egg scripts that run `apt install` without `apt update` rely on them.
+RUN         apt-get update \
+            && apt-get upgrade -y \
+            && apt-get install -y --no-install-recommends ca-certificates curl git unzip zip tar jq wget
+
+# 32-bit libraries for steamcmd, amd64 only. Recommends are kept to match upstream (they pull in e.g. libicu72).
+RUN         if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
+                dpkg --add-architecture i386 \
+                && apt-get update \
+                && apt-get install -y lib32gcc-s1 libsdl2-2.0-0:i386; \
+            fi
