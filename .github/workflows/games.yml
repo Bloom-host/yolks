@@ -1,13 +1,20 @@
 name: build games
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 0 1 * *"
+  # Rebuild after every java build (including its monthly one): hytale bakes in java_25's entrypoint.
+  # Not gated on success: one failed java job fails the whole run, and a rebuild on the old java_25 is harmless.
+  workflow_run:
+    workflows: ["build java"]
+    types: [completed]
   push:
     branches:
       - master
     paths:
       - games/**
+# The last triggered build wins, so an older in-flight one can't publish over a newer java_25 base.
+concurrency:
+  group: games
+  cancel-in-progress: true
 jobs:
   push:
     name: "games:${{ matrix.game }}"

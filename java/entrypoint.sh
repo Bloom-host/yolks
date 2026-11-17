@@ -48,6 +48,18 @@ if [ -d /opt/java/legacy ]; then
 	done
 fi
 
+# CVE-2026-114938 (Java4Shell): HotSpot's AVX-512 Base64 decode intrinsic writes out of bounds.
+# Turn it off for every JVM in the container, appended so an egg's own JAVA_TOOL_OPTIONS can't drop it.
+# The Temurin 8 and OpenJ9 builds shipped here aren't affected and can refuse to start with the option, so
+# they're skipped. They're identified from the JDK's release file rather than by running java, so egg
+# options can't change the answer.
+# Keep it: 18, 19 and 24 are EOL and will never be fixed, and the GraalVM and Azul images pin affected JDKs.
+java4shell_java=$(readlink -f "$(command -v java || echo "${JAVA_HOME}/bin/java")")
+if ! grep -qsE '^JAVA_VERSION="?1\.|^JVM_VARIANT="?Openj9' "${java4shell_java%/bin/java}/release" "${java4shell_java%/jre/bin/java}/release"; then
+	export JAVA_TOOL_OPTIONS="${JAVA_TOOL_OPTIONS:+${JAVA_TOOL_OPTIONS} }-XX:-UseBASE64Intrinsics"
+fi
+unset java4shell_java
+
 # Print Java version
 printf "\033[1m\033[33mcontainer@pterodactyl~ \033[0mjava -version\n"
 java -version
