@@ -1,7 +1,11 @@
 FROM ubuntu:24.04
 ENV DEBIAN_FRONTEND=noninteractive
 
-ARG VERSION=25.0.2
+# GraalVM Community now tags releases by Graal version (graal-25.6.5.1) and names its assets after the
+# innovation release and the JDK (25i6-25.0.5.1), so the tag and the asset version are set separately.
+# 25.0.5.1 carries the fix for CVE-2026-114938 (Java4Shell).
+ARG RELEASE=graal-25.6.5.1
+ARG VERSION=25i6-25.0.5.1
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8' ARCH='x64'
 
@@ -9,7 +13,7 @@ RUN apt-get update -y \
   && apt-get install -y --no-install-recommends curl ca-certificates openssl git git-lfs tar sqlite3 fontconfig tzdata locales iproute2 \
   && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
   && locale-gen en_US.UTF-8 \
-  && curl --retry 3 -Lfso /tmp/graalvm.tar.gz https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-${VERSION}/graalvm-community-jdk-${VERSION}_linux-${ARCH}_bin.tar.gz \
+  && curl --retry 3 -Lfso /tmp/graalvm.tar.gz https://github.com/graalvm/graalvm-ce-builds/releases/download/${RELEASE}/graalvm-community-jdk-${VERSION}_linux-${ARCH}_bin.tar.gz \
   && mkdir -p /opt/java/graalvm \
   && cd /opt/java/graalvm \
   && tar -xf /tmp/graalvm.tar.gz --strip-components=1 \
